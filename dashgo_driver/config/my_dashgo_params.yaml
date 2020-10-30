@@ -1,4 +1,4 @@
-port: /dev/dashgo
+port: /dev/ttyUSB0
 baud: 115200
 timeout: 0.1
 rate: 50
