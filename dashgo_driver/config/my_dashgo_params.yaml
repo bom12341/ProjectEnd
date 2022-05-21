@@ -5,7 +5,7 @@ rate: 50
 sensorstate_rate: 10
 
 useSonar: True
-useImu: False
+useImu: True
 use_base_controller: True
 base_controller_rate: 10
 
