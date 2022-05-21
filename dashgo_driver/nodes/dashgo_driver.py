@@ -321,8 +321,8 @@ class Arduino:
 
     def ping(self):
         values = self.execute_array('p')
-        if len(values) != 5:
-            print "ping count was not 5"
+        if len(values) != 4:
+            print "ping count was {}".format(values)
             raise SerialException
             return None
         else:
@@ -415,7 +415,8 @@ class BaseController:
 
         # Subscriptions
         #rospy.Subscriber("cmd_vel", Twist, self.cmdVelCallback)
-        rospy.Subscriber("smoother_cmd_vel", Twist, self.cmdVelCallback)
+        #rospy.Subscriber("smoother_cmd_vel", Twist, self.cmdVelCallback)
+	rospy.Subscriber("EAI_Collision_control", Twist, self.cmdVelCallback)
         
         # Clear any old odometry info
         self.arduino.reset_encoders()
@@ -507,8 +508,8 @@ class BaseController:
         if now > self.t_next:
             if (self.useSonar == True) :
                 try:
-                    r0, r1, r2, r3, r4= self.arduino.ping()
-                    rospy.loginfo("r0: " + str(r0)+"r1: " + str(r1) + "r2: " + str(r2) + "r3: " + str(r3)+ "r4: " + str(r4))
+                    r0, r1, r2, r3= self.arduino.ping()
+                    rospy.loginfo("r0: " + str(r0)+"r1: " + str(r1) + "r2: " + str(r2) + "r3: " + str(r3))
                     #rospy.loginfo("r0: " + str(r0) + "r3: " + str(r3))
                     sonar0_range = Range()
                     sonar0_range.header.stamp = now
@@ -542,14 +543,14 @@ class BaseController:
                     sonar3_range.max_range = 4.0
                     sonar3_range.range = r3/100.0
                     self.sonar3_pub.publish(sonar3_range)
-                    sonar4_range = Range()
-                    sonar4_range.header.stamp = now
-                    sonar4_range.header.frame_id = "/sonar4"
-                    sonar4_range.radiation_type = Range.ULTRASOUND
-                    sonar4_range.min_range = 0.05
-                    sonar4_range.max_range = 4.0
-                    sonar4_range.range = r4/100.0
-                    self.sonar4_pub.publish(sonar4_range)
+                    #sonar4_range = Range()
+                    #sonar4_range.header.stamp = now
+                    #sonar4_range.header.frame_id = "/sonar4"
+                    #sonar4_range.radiation_type = Range.ULTRASOUND
+                    #sonar4_range.min_range = 0.05
+                    #sonar4_range.max_range = 4.0
+                    #sonar4_range.range = r4/100.0
+                    #self.sonar4_pub.publish(sonar4_range)
                     if(sonar0_range.range>=0.05) and (sonar0_range.range<=4.0):
                         self.front_ranger_l = sonar0_range.range
                     else:
@@ -713,6 +714,9 @@ class BaseController:
         self.arduino.drive(0, 0)
             
     def cmdVelCallback(self, req):
+
+	print("moving")
+
         # Handle velocity-based movement requests
         self.last_cmd_vel = rospy.Time.now()
         

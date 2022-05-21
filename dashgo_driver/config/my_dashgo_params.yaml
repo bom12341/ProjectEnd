@@ -4,7 +4,7 @@ timeout: 0.1
 rate: 50
 sensorstate_rate: 10
 
-useSonar: False
+useSonar: True
 useImu: False
 use_base_controller: True
 base_controller_rate: 10
